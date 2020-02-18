@@ -1,0 +1,56 @@
+---
+title: "Class 13 GH"
+author: "Emily R. Paris"
+date: "2/18/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Download and clean HIV-Pr receptor structure
+
+Here we wil download the 1HSG PDB structure from the online database, remove the bound drug from Merk and write out a protein only and lignd only new set of PDB files. **This code can be used on any protein, just change files!**
+
+```{r}
+library(bio3d)
+
+# Download file to workspace
+file.name <- get.pdb("1hsg")
+```
+
+```{r}
+# Read file into R
+hiv <-read.pdb(file.name)
+
+# Call information about file
+hiv
+```
+
+>Q1: What is the name of the two non protein resid values in this structure? What does resid
+correspond to and how would you get a listing of all reside values in this structure? 
+    
+    The two non-protein resid values are called "HOH" and "MK1". This corresponds to parts of the small molecule (residuals) that are not proteins. Use 'atom.select'.
+
+```{r}
+# Select specifically for proteins
+prot <- atom.select(hiv, string = "protein", value = TRUE)
+
+# Make a file 
+write.pdb(prot, file = "1hsg.protein.pdb")
+```
+
+```{r}
+# Again for ligand
+lig <- atom.select(hiv, string = "ligand", value = TRUE)
+write.pdb(lig, file = "1hsg.ligand.pdb")
+```
+
+
+```{r}
+# Sanity Check: make sure everything in 'lig' says "MK1" to make sure it all sorted to right spot
+lig
+```
+
+
